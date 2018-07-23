@@ -1,0 +1,177 @@
+%\VignetteIndexEntry{practical3}
+%!Snw weave = knitr
+%\VignetteEngine{knitr::knitr}
+<<echo=FALSE>>=
+results = "hide"; echo = FALSE
+@
+\documentclass[a4paper,justified,openany]{tufte-handout}
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+library(ggplot2)
+opts_knit$set(out.format = "latex")
+knit_theme$set(knit_theme$get("greyscale0"))
+
+options(replace.assign=FALSE,width=50)
+
+opts_chunk$set(fig.path='knitr_figure/graphics-',
+               cache.path='knitr_cache/graphics-',
+               fig.align='center',
+               dev='png', fig.width=5, fig.height=5,
+               fig.show='hold', cache=FALSE, par=TRUE)
+knit_hooks$set(crop=hook_pdfcrop)
+
+knit_hooks$set(par=function(before, options, envir){
+    if (before && options$fig.show!='none') {
+        par(mar=c(3,3,2,1),cex.lab=.95,cex.axis=.9,
+            mgp=c(2,.7,0),tcl=-.01, las=1)
+}}, crop=hook_pdfcrop)
+@
+\usepackage{amsmath}
+% Set up the images/graphics package
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+\title{Advanced graphics: practical 3 \Sexpr{ifelse(echo, "solutions", "")}}
+\author[Jumping Rivers]{Jumping Rivers}
+\date{}  % if the \date{} command is left out, the current date will be used
+
+% The following package makes prettier tables.  We're all about the bling!
+\usepackage{booktabs}
+
+% The units package provides nice, non-stacked fractions and better spacing
+% for units.
+\usepackage{units}
+
+% The fancyvrb package lets us customize the formatting of verbatim
+% environments.  We use a slightly smaller font.
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}
+\newcommand{\cc}{\texttt}
+\setcounter{secnumdepth}{2}
+
+\usepackage{microtype}
+
+\begin{document}
+\maketitle% this prints the handout title, author, and date
+
+\begin{abstract}
+  \noindent This practical aims to guide you through some of the key ideas in
+  data manipulation. I've tried to construct this practical in such a way that
+  you get to experiment with the various tools. Feel free to experiment!
+\end{abstract}
+<<echo=FALSE>>=
+data(aphids, package = "jrSouth")
+@
+
+\section{Factors}
+
+When using \cc{ggplot2}, the easiest way of rearranging the graph or to alter labels
+is to manipulate the data set. Consider the \cc{mpg} data set:
+
+<<message=FALSE>>=
+data(mpg, package = "ggplot2")
+@
+
+Suppose we generate a scatter plot of engine displacement against highway mpg.
+
+<<tidy=FALSE>>=
+g = ggplot(data=mpg, aes(x=displ, y=hwy)) +
+  geom_point()
+@
+
+\noindent Next, we add a loess line, conditional on the drive type:
+
+<<fig.keep='none', message=FALSE>>=
+g + stat_smooth(aes(colour=drv))
+@
+
+\noindent While this graph is suitable for exploring the data; for publication,
+we would like to rename the axis and legend labels. To change the axis labels,
+we can rename the data frame columns or use \cc{xlab} and \cc{ylab}. To change
+the order of the legend, we need to manipulate the data. Since \cc{drv} is
+a character, we could use:
+
+<<eval=FALSE>>=
+mpg[mpg$drv == "4",]$drv = "4wd"
+mpg[mpg$drv == "f",]$drv = "Front"
+mpg[mpg$drv == "r",]$drv = "Rear"
+@
+
+\noindent However the legend will still be ordered alphabetically.
+Instead, we can use a factor:
+
+<<>>=
+##Reload the data just to make sure
+data(mpg, package="ggplot2")
+mpg$drv = factor(mpg$drv, labels = c("4wd", "Front", "Rear"))
+@
+\noindent To change the order of the, we need to use the \cc{factor} function:
+<<tidy=FALSE>>=
+mpg$drv = factor(mpg$drv,
+                 levels = c("Front", "Rear", "4wd"))
+@
+
+\noindent The legend now displays the labels in the order: \cc{Front}, \cc{Rear} and \cc{4wd}.
+
+\begin{figure}[t]
+\centering
+<<F1, echo=FALSE, cache=TRUE, pos.width="\\textwidth",fig.width=6>>=
+aphids$Block = factor(aphids$Block)
+aphids$Water = factor(aphids$Water,
+                      levels=c("Low", "Medium", "High"))
+ga = ggplot(data=aphids) +
+  geom_point(aes(Time, Aphids, colour=Block)) +
+  facet_grid(Nitrogen ~ Water) +
+  geom_line(aes(Time, Aphids, colour=Block)) +
+  theme_bw()
+
+print(ga)
+@
+\caption{Final figure from section 2.}\label{F1}
+\end{figure}
+
+\section{Aphids}
+
+This data set consists of seven observations on cotton aphid counts on twenty
+randomly chosen leaves in each plot, for twenty-seven treatment-block
+combinations. The data were recorded in July 2004 in Lamesa, Texas. The
+treatments consisted of three nitrogen levels (blanket, variable and none),
+three irrigation levels (low, medium and high) and three blocks, each being a
+distinct area. Irrigation treatments were randomly assigned within each block as
+whole plots. Nitrogen treatments were randomly assigned within each whole block
+as split plots.
+
+<<cache=TRUE, results='hide'>>=
+data(aphids, package="jrSouth")
+@
+
+\noindent The sampling times are once per week.
+
+\newthought{Reproduce} figure \ref{F1}. Here are some hints to get you started.
+The key idea is to think of the plot in terms of layers. So
+\begin{itemize}
+\item Leave the ordering of factors to the end
+\item The plot contains a combination of \cc{geom\_line} and \cc{geom\_point}.
+\item You can change the x-axis label using
+<<eval=FALSE, tidy=FALSE>>=
+ + xlab("Time")
+@
+\item Change the theme using \cc{theme\_bw()}
+\end{itemize}
+\newpage
+<<fig.keep='none', tidy=FALSE, echo=echo, results=results>>=
+##Code for figure 1
+<<F1>>
+@
+
+
+\section*{Solutions}
+
+Solutions are contained within this package:
+<<eval=FALSE>>=
+library(jrSouth)
+vignette("ggplot2_solutions2", package="jrSouth")
+@
+\end{document}
