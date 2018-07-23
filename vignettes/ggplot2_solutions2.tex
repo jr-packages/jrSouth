@@ -1,0 +1,251 @@
+%\VignetteIndexEntry{solutions3}
+%!Snw weave = knitr
+%\VignetteEngine{knitr::knitr}
+
+\documentclass[a4paper,justified,openany]{tufte-handout}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.102, 0.102, 0.102}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.302,0.302,0.302}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.102,0.102,0.102}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.102,0.102,0.102}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.102,0.102,0.102}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.102,0.102,0.102}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.102,0.102,0.102}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+
+\usepackage{amsmath}
+% Set up the images/graphics package
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+\title{Advanced graphics: practical 3 solutions}
+\author[Jumping Rivers]{Jumping Rivers}
+\date{}  % if the \date{} command is left out, the current date will be used
+
+% The following package makes prettier tables.  We're all about the bling!
+\usepackage{booktabs}
+
+% The units package provides nice, non-stacked fractions and better spacing
+% for units.
+\usepackage{units}
+
+% The fancyvrb package lets us customize the formatting of verbatim
+% environments.  We use a slightly smaller font.
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}
+\newcommand{\cc}{\texttt}
+\setcounter{secnumdepth}{2}
+
+\usepackage{microtype}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\maketitle% this prints the handout title, author, and date
+
+\begin{abstract}
+  \noindent This practical aims to guide you through some of the key ideas in
+  data manipulation. I've tried to construct this practical in such a way that
+  you get to experiment with the various tools. Feel free to experiment!
+\end{abstract}
+
+
+\section{Factors}
+
+When using \cc{ggplot2}, the easiest way of rearranging the graph or to alter labels
+is to manipulate the data set. Consider the \cc{mpg} data set:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{data}\hlstd{(mpg,} \hlkwc{package} \hlstd{=} \hlstr{"ggplot2"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Suppose we generate a scatter plot of engine displacement against highway mpg.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{g} \hlkwb{=} \hlkwd{ggplot}\hlstd{(}\hlkwc{data}\hlstd{=mpg,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=displ,} \hlkwc{y}\hlstd{=hwy))} \hlopt{+}
+  \hlkwd{geom_point}\hlstd{()}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent Next, we add a loess line, conditional on the drive type:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{g} \hlopt{+} \hlkwd{stat_smooth}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{colour}\hlstd{=drv))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent While this graph is suitable for exploring the data; for publication,
+we would like to rename the axis and legend labels. To change the axis labels,
+we can rename the data frame columns or use \cc{xlab} and \cc{ylab}. To change
+the order of the legend, we need to manipulate the data. Since \cc{drv} is
+a character, we could use:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{mpg[mpg}\hlopt{$}\hlstd{drv} \hlopt{==} \hlstr{"4"}\hlstd{,]}\hlopt{$}\hlstd{drv} \hlkwb{=} \hlstr{"4wd"}
+\hlstd{mpg[mpg}\hlopt{$}\hlstd{drv} \hlopt{==} \hlstr{"f"}\hlstd{,]}\hlopt{$}\hlstd{drv} \hlkwb{=} \hlstr{"Front"}
+\hlstd{mpg[mpg}\hlopt{$}\hlstd{drv} \hlopt{==} \hlstr{"r"}\hlstd{,]}\hlopt{$}\hlstd{drv} \hlkwb{=} \hlstr{"Rear"}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent However the legend will still be ordered alphabetically.
+Instead, we can use a factor:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{##Reload the data just to make sure}
+\hlkwd{data}\hlstd{(mpg,} \hlkwc{package}\hlstd{=}\hlstr{"ggplot2"}\hlstd{)}
+\hlstd{mpg}\hlopt{$}\hlstd{drv} \hlkwb{=} \hlkwd{factor}\hlstd{(mpg}\hlopt{$}\hlstd{drv,} \hlkwc{labels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"4wd"}\hlstd{,} \hlstr{"Front"}\hlstd{,} \hlstr{"Rear"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\noindent To change the order of the, we need to use the \cc{factor} function:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{mpg}\hlopt{$}\hlstd{drv} \hlkwb{=} \hlkwd{factor}\hlstd{(mpg}\hlopt{$}\hlstd{drv,}
+                 \hlkwc{levels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"Front"}\hlstd{,} \hlstr{"Rear"}\hlstd{,} \hlstr{"4wd"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent The legend now displays the labels in the order: \cc{Front}, \cc{Rear} and \cc{4wd}.
+
+\begin{figure}[t]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{knitr_figure/graphics-F1-1} 
+
+}
+
+
+
+\end{knitrout}
+\caption{Final figure from section 2.}\label{F1}
+\end{figure}
+
+\section{Aphids}
+
+This data set consists of seven observations on cotton aphid counts on twenty
+randomly chosen leaves in each plot, for twenty-seven treatment-block
+combinations. The data were recorded in July 2004 in Lamesa, Texas. The
+treatments consisted of three nitrogen levels (blanket, variable and none),
+three irrigation levels (low, medium and high) and three blocks, each being a
+distinct area. Irrigation treatments were randomly assigned within each block as
+whole plots. Nitrogen treatments were randomly assigned within each whole block
+as split plots.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{data}\hlstd{(aphids,} \hlkwc{package}\hlstd{=}\hlstr{"jrSouth"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent The sampling times are once per week.
+
+\newthought{Reproduce} figure \ref{F1}. Here are some hints to get you started.
+The key idea is to think of the plot in terms of layers. So
+\begin{itemize}
+\item Leave the ordering of factors to the end
+\item The plot contains a combination of \cc{geom\_line} and \cc{geom\_point}.
+\item You can change the x-axis label using
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+ \hlopt{+} \hlkwd{xlab}\hlstd{(}\hlstr{"Time"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\item Change the theme using \cc{theme\_bw()}
+\end{itemize}
+\newpage
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{##Code for figure 1}
+\hlstd{aphids}\hlopt{$}\hlstd{Block} \hlkwb{=} \hlkwd{factor}\hlstd{(aphids}\hlopt{$}\hlstd{Block)}
+\hlstd{aphids}\hlopt{$}\hlstd{Water} \hlkwb{=} \hlkwd{factor}\hlstd{(aphids}\hlopt{$}\hlstd{Water,}
+                      \hlkwc{levels}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{"Low"}\hlstd{,} \hlstr{"Medium"}\hlstd{,} \hlstr{"High"}\hlstd{))}
+\hlstd{ga} \hlkwb{=} \hlkwd{ggplot}\hlstd{(}\hlkwc{data}\hlstd{=aphids)} \hlopt{+}
+  \hlkwd{geom_point}\hlstd{(}\hlkwd{aes}\hlstd{(Time, Aphids,} \hlkwc{colour}\hlstd{=Block))} \hlopt{+}
+  \hlkwd{facet_grid}\hlstd{(Nitrogen} \hlopt{~} \hlstd{Water)} \hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(Time, Aphids,} \hlkwc{colour}\hlstd{=Block))} \hlopt{+}
+  \hlkwd{theme_bw}\hlstd{()}
+
+\hlkwd{print}\hlstd{(ga)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+
+\section*{Solutions}
+
+Solutions are contained within this package:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(jrGgplot2)}
+\hlkwd{vignette}\hlstd{(}\hlstr{"ggplot2_solutions2"}\hlstd{,} \hlkwc{package}\hlstd{=}\hlstr{"jrSouth"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\end{document}

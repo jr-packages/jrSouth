@@ -97,3 +97,31 @@ NULL
 #' @source http://www.knownman.com/james-bond-graph/
 #' @docType data
 NULL
+
+#' Game of Thrones Audience figures
+#'
+#' Taken from wikipedia. The data set \code{GoT_df} returns a
+#' data frame, whereas \code{GoT} returns a tibble.
+#'
+#'@name GoT
+#'@aliases GoT_df
+#'@docType data
+#'@return A tibble or data frame.
+#'@keywords datasets
+#'@examples
+#' data(GoT)
+#' data(GoT_df)
+NULL
+
+#' OK Cupid data set
+#'
+#' Data from ok cupid see https://github.com/rudeboybert/JSE_OkCupid
+#'
+#'@name okcupid
+#'@docType data
+#'@usage data(okcupid)
+#'@return A tibble
+#'@keywords datasets
+#'@examples
+#' data(okcupid)
+NULL
