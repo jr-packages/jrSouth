@@ -1,5 +1,5 @@
 ---
-title: "Chapter 3 Practical"
+title: "Practical 1"
 author: "Jumping Rivers"
 output: pdf_document
 vignette: >

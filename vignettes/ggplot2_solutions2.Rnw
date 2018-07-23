@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{solutions3}
+%\VignetteIndexEntry{ggplot2_solutions2}
 %!Snw weave = knitr
 %\VignetteEngine{knitr::knitr}
 <<echo=FALSE>>=
@@ -33,7 +33,7 @@ knit_hooks$set(par=function(before, options, envir){
 \setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 \graphicspath{{graphics/}}
 
-\title{Advanced graphics: practical 3 \Sexpr{ifelse(echo, "solutions", "")}}
+\title{Advanced graphics: practical 2 \Sexpr{ifelse(echo, "solutions", "")}}
 \author[Jumping Rivers]{Jumping Rivers}
 \date{}  % if the \date{} command is left out, the current date will be used
 

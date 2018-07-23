@@ -1,11 +1,11 @@
 ---
-title: "Chapter 3 Practical Solutions"
+title: "Practical 1 Solutions"
 author: "Jumping Rivers"
 output: pdf_document
 vignette: >
   %\VignetteIndexEntry{ggplot2_solutions}
-  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---

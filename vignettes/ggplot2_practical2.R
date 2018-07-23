@@ -49,21 +49,6 @@ mpg$drv = factor(mpg$drv, labels = c("4wd", "Front", "Rear"))
 mpg$drv = factor(mpg$drv,
                  levels = c("Front", "Rear", "4wd"))
 
-## ----F1, echo=FALSE, cache=TRUE, pos.width="\\textwidth",fig.width=6----
-aphids$Block = factor(aphids$Block)
-aphids$Water = factor(aphids$Water,
-                      levels=c("Low", "Medium", "High"))
-ga = ggplot(data=aphids) +
-  geom_point(aes(Time, Aphids, colour=Block)) +
-  facet_grid(Nitrogen ~ Water) +
-  geom_line(aes(Time, Aphids, colour=Block)) +
-  theme_bw()
-
-print(ga)
-
-## ----cache=TRUE, results='hide'-----------------
-data(aphids, package="jrSouth")
-
 ## ----eval=FALSE, tidy=FALSE---------------------
 #   + xlab("Time")
 

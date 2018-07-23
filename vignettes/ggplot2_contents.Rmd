@@ -11,7 +11,7 @@ library("ggplot2")
 ```
 and the OK Cupid data set
 ```{r, , echo = TRUE}
-data(okcupid, package = "jrTidyverse")
+data(okcupid, package = "jrSouth")
 ```
 
 ## Scatter plots
