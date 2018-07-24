@@ -88,3 +88,10 @@ ggplot(data=mpg, aes(x=displ, y=hwy)) +
 ## ---- label = "F2", out.width='0.5\\textwidth', echo=FALSE, message=FALSE, fig.cap="Graphics for section 1", fig.keep='all'----
 g2
 
+## ---- message=FALSE, fig.keep='none'-------------------------------------
+g1 = g + geom_point() + stat_smooth(linetype=2) +
+  xlab("Displacement") + ylab("Highway mpg")
+
+## ---- message=FALSE, eval = FALSE----------------------------------------
+#  g2 = g + geom_point() + stat_smooth(aes(colour=drv))
+

@@ -7,6 +7,10 @@ solutions1.Rnw
 *.out
 practical[1|2|3].pdf
 practical[1|2|3].tex
+ggplot2_practical[1|2].pdf
+ggplot2_solutions[1|2].pdf
 *.synctex.gz
 *.bbl
 *.blg
+*_cache
+*_files

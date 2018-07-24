@@ -164,7 +164,14 @@ Hint: try `stat_smooth()` and `ylab('New label')`.
 ```{r, label = "F2", out.width='0.5\\textwidth', echo=FALSE, message=FALSE, fig.cap="Graphics for section 1", fig.keep='all'}
 g2
 ```
-
+```{r, message=FALSE, fig.keep='none'}
+g1 = g + geom_point() + stat_smooth(linetype=2) +
+  xlab("Displacement") + ylab("Highway mpg")
+```
 2) Figure 2: Using `stat_smooth()`, add a loess line conditional
   on the drive.
+  
+```{r, message=FALSE, eval = FALSE}
+g2 = g + geom_point() + stat_smooth(aes(colour=drv))
+```
 
